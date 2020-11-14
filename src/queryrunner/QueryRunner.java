@@ -5,6 +5,7 @@
  */
 package queryrunner;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -272,7 +273,7 @@ public class QueryRunner {
         return m_error;
     }
 
-    public void PrintMenu() {
+    public int PrintMenu(Scanner c) {
         System.out.println("Select query (number) to run: ");
         System.out.println("1  Total distance hiked for user");
         System.out.println("2  Total elevation hiked for user");
@@ -284,6 +285,80 @@ public class QueryRunner {
         System.out.println("8  List of trails the user has not hiked in their state");
         System.out.println("9  List of top 10 most hiked trails");
         System.out.println("10 List of trails within given distance range");
+        System.out.println("11 Exit program");
+        String str = c.nextLine();
+        int queryChoice = Integer.parseInt(str);
+        return queryChoice;
+    }
+
+    public void PrintQuery(QueryRunner queryrunner, Scanner c, int queryChoice) {
+        switch (queryChoice) {
+            case 0:
+                System.out.println("Total distance hiked by user");
+                break;
+            case 1:
+                System.out.println("Total elevation hiked by user");
+                break;
+            case 2:
+                System.out.println("Top 5 hikers with the most hikes");
+                break;
+            case 3:
+                System.out.println("List of all trails the user has hiked");
+                break;
+            case 4:
+                System.out.println("Total product revenue");
+                break;
+            case 5:
+                System.out.println("List of all current subscriptions");
+                break;
+            case 6:
+                System.out.println("List of dog-friendly trails that the user has not hiked");
+                break;
+            case 7:
+                System.out.println("List of trails the user has not hiked in their state");
+                break;
+            case 8:
+                System.out.println("List of the top 10 most hiked trails");
+                break;
+            case 9:
+                System.out.println("List of trails within given distance range");
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void RunQuery(QueryRunner queryrunner, Scanner c, int queryChoice) {
+        int amt = queryrunner.GetParameterAmtForQuery(queryChoice);
+        String[] params = new String[amt];
+        if (queryrunner.isParameterQuery(queryChoice)){
+
+            for (int j = 0; j < amt; j++) {
+                String label = queryrunner.GetParamText(queryChoice, j);
+                System.out.println("Parameter " + (j+1) + " " + label + ": ");
+                params[j] = c.next();
+            }
+        }
+        if (queryrunner.isActionQuery(queryChoice)) {
+            queryrunner.ExecuteUpdate(queryChoice, params);
+            int changed = queryrunner.GetUpdateAmount();
+            System.out.println(changed + " rows were updated.");
+        } else {
+            queryrunner.ExecuteQuery(queryChoice, params);
+            String[][] result = queryrunner.GetQueryData();
+            String[] header = queryrunner.GetQueryHeaders();
+            for (int h = 0; h < header.length; h++) {
+                System.out.print(header[h] + " | ");
+            }
+            System.out.println();
+            for (int k = 0; k < result.length; k++) {
+                for (int l = 0; l < result[k].length; l++) {
+                    System.out.print(result[k][l] + " | ");
+                }
+                System.out.println();
+            }
+        }
+        System.out.println();
     }
  
     private QueryJDBC m_jdbcData;
@@ -299,12 +374,17 @@ public class QueryRunner {
 
     
     public static void main(String[] args) {
-        // TODO code application logic here
-
+        Scanner c = new Scanner(System.in);
+        System.out.println("GUI or console version?");
+        System.out.println("1 GUI");
+        System.out.println("2 Console");
+        System.out.println("Choice: ");
+        String str = c.nextLine();
+        int choice = Integer.parseInt(str);
 
         final QueryRunner queryrunner = new QueryRunner();
         
-        if (args.length == 0)
+        if (choice == 1) // GUI version
         {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
@@ -315,9 +395,9 @@ public class QueryRunner {
         }
         else
         {
-            if (args[0].equals ("-console"))
+            if (choice == 2) // console version
             {
-                Scanner c = new Scanner(System.in);
+
                 System.out.println("Welcome to the Trail Seeker Console!");
                 System.out.println("Enter info to connect to the database.");
                 System.out.println("Host name: ");
@@ -331,42 +411,20 @@ public class QueryRunner {
 
                 boolean success = queryrunner.Connect(connection, username, password, db);
                 if (success) {
-                    int n = queryrunner.GetTotalQueries();
-                    for (int i = 0; i < n; i++) { // TODO question so we loop through each query once?
-                        int amt = queryrunner.GetParameterAmtForQuery(i);
-                        String[] params = new String[amt]; // TODO question what to do if there are no params?
-                        if (queryrunner.isParameterQuery(i)){
 
-                            for (int j = 0; j < amt; j++) {
-                                String label = queryrunner.GetParamText(i, j);
-                                System.out.println("Parameter " + (j+1) + " " + label + ": ");
-                                params[j] = c.nextLine();
-                            }
-                        }
-                        if (queryrunner.isActionQuery(i)) {
-                            queryrunner.ExecuteUpdate(i, params);
-                            int changed = queryrunner.GetUpdateAmount();
-                            System.out.println(changed + " rows were updated.");
-                        } else {
-                            queryrunner.ExecuteQuery(i, params);
-                            String[][] result = queryrunner.GetQueryData();
-                            String[] header = queryrunner.GetQueryHeaders();
-                            for (int h = 0; h < header.length; h++) {
-                                System.out.print(header[h] + " | ");
-                            }
-                            System.out.println();
-                            for (int k = 0; k < result.length; k++) {
-                                for (int l = 0; l < result[k].length; l++) {
-                                    System.out.print(result[k][l] + " | ");
-                                }
-                                System.out.println();
-                            }
-                        }
-                        System.out.println();
+
+                    int queryChoice = queryrunner.PrintMenu(c);
+
+                    while (queryChoice != 11) {
+                        queryChoice--;
+                        queryrunner.PrintQuery(queryrunner, c, queryChoice);
+                        queryrunner.RunQuery(queryrunner, c, queryChoice);
+                        queryChoice = queryrunner.PrintMenu(c);
                     }
+
                     System.out.println("Thanks for using Trail Seeker Console!");
-                    boolean disconnect_sucess = queryrunner.Disconnect();
-                    if (!disconnect_sucess) {
+                    boolean disconnect_success = queryrunner.Disconnect();
+                    if (!disconnect_success) {
                         System.out.println(queryrunner.GetError());
                     }
 
@@ -417,6 +475,8 @@ public class QueryRunner {
                 //    alter any code in QueryJDBC, QueryData, or QueryFrame to make this work.
 //                System.out.println("Please write the non-gui functionality");
                 
+            } else {
+                System.out.println("Invalid choice, please try again.");
             }
         }
  
