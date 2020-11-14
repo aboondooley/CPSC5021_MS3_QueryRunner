@@ -200,7 +200,7 @@ public class QueryJDBC {
         url += host;
         url +=":3306/";
         url += database;   
-        url +="?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+        url +="?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
         try 
         {
 
