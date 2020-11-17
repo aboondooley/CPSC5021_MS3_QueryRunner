@@ -57,18 +57,7 @@ public class QueryRunner {
 
         
         // Our app is called Trail Seeker
-
         this.m_projectTeamApplication="Trail Seeker";
-        
-        // Each row that is added to m_queryArray is a separate query. It does not work on Stored procedure calls.
-        // The 'new' Java keyword is a way of initializing the data that will be added to QueryArray. Please do not change
-        // Format for each row of m_queryArray is: (QueryText, ParamaterLabelArray[], LikeParameterArray[], IsItActionQuery, IsItParameterQuery)
-        
-        //    QueryText is a String that represents your query. It can be anything but Stored Procedure
-        //    Parameter Label Array  (e.g. Put in null if there is no Parameters in your query, otherwise put in the Parameter Names)
-        //    LikeParameter Array  is an array I regret having to add, but it is necessary to tell QueryRunner which parameter has a LIKE Clause. If you have no parameters, put in null. Otherwise put in false for parameters that don't use 'like' and true for ones that do.
-        //    IsItActionQuery (e.g. Mark it true if it is, otherwise false)
-        //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
 
         // Query 1
         m_queryArray.add(new QueryData(
