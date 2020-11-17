@@ -11,10 +11,11 @@ package queryrunner;
  *
  * @author mckeem
  */
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Color;
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
 
 public class QueryFrame extends javax.swing.JFrame {
 
@@ -41,6 +42,130 @@ public class QueryFrame extends javax.swing.JFrame {
         jBtnRunQuery.setEnabled(false);
         
         jLabel14.setText(m_queryrunner.GetProjectTeamApplication());
+
+
+        // Set aesthetics: background color, font, and text color
+        // Using earthly natural tones bc we are a hiking app
+
+        Font f1 = new Font(Font.MONOSPACED, Font.PLAIN, 25);
+        Font f2 = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+
+        Color trailGreen = new Color(152, 199, 113);
+        Color lightBlue = new Color(206, 246, 250);
+        Color brown = new Color(107, 52, 50);
+
+        jLabel1.setFont(f2);
+        jLabel1.setForeground(brown);
+
+        jLabel2.setFont(f2);
+        jLabel2.setForeground(brown);
+
+        jLabel3.setFont(f2);
+        jLabel3.setForeground(brown);
+
+        jLabel4.setFont(f2);
+        jLabel4.setForeground(brown);
+
+        jLabel5.setFont(f2);
+        jLabel5.setForeground(brown);
+
+        jLabel6.setFont(f2);
+        jLabel6.setForeground(brown);
+
+        jLabel7.setFont(f2);
+        jLabel7.setForeground(brown);
+
+        jLabel8.setFont(f2);
+        jLabel8.setForeground(brown);
+
+        jLabel9.setFont(f2);
+        jLabel9.setForeground(brown);
+
+        jLabel10.setFont(f2);
+        jLabel10.setForeground(brown);
+
+        jLabel11.setFont(f2);
+        jLabel11.setForeground(brown);
+
+        jLabel12.setFont(f2);
+        jLabel12.setForeground(brown);
+
+        jLabel13.setFont(f2);
+        jLabel13.setForeground(brown);
+
+        jLabel14.setFont(f1);
+        jLabel14.setForeground(brown);
+
+        jTextHostname.setFont(f2);
+        jTextHostname.setForeground(brown);
+        jTextHostname.setBackground(lightBlue);
+
+        jTextFieldUser.setFont(f2);
+        jTextFieldUser.setForeground(brown);
+        jTextFieldUser.setBackground(lightBlue);
+
+        jPasswordField1.setFont(f2);
+        jPasswordField1.setForeground(brown);
+        jPasswordField1.setBackground(lightBlue);
+
+        jTextFieldDatabase.setFont(f2);
+        jTextFieldDatabase.setForeground(brown);
+        jTextFieldDatabase.setBackground(lightBlue);
+
+        jTextField5.setFont(f2);
+        jTextField5.setForeground(brown);
+        jTextField5.setBackground(lightBlue);
+
+        jTextField6.setFont(f2);
+        jTextField6.setForeground(brown);
+        jTextField6.setBackground(lightBlue);
+
+        jTextField7.setFont(f2);
+        jTextField7.setForeground(brown);
+
+        jTextField8.setFont(f2);
+        jTextField8.setForeground(brown);
+
+        jTextField9.setFont(f2);
+        jTextField9.setForeground(brown);
+
+        jTextField10.setFont(f2);
+        jTextField10.setForeground(brown);
+
+        jTextField11.setFont(f2);
+        jTextField11.setForeground(brown);
+
+        jTextField12.setFont(f2);
+        jTextField12.setForeground(brown);
+
+        jTextArea1.setFont(f2);
+        jTextArea1.setForeground(brown);
+        jTextArea1.setBackground(lightBlue);
+
+        jTextArea2.setFont(f2);
+        jTextArea2.setForeground(brown);
+        jTextArea2.setBackground(lightBlue);
+
+        jConnectButton.setFont(f2);
+        jConnectButton.setForeground(brown);
+        jConnectButton.setBackground(trailGreen);
+
+        jBtnRunQuery.setFont(f2);
+        jBtnRunQuery.setForeground(brown);
+        jBtnRunQuery.setBackground(trailGreen);
+
+        jComboBoxQuery.setFont(f2);
+        jComboBoxQuery.setForeground(brown);
+        jComboBoxQuery.setBackground(trailGreen);
+
+        jScrollPane1.setFont(f2);
+        jScrollPane1.setForeground(brown);
+        jScrollPane1.setBackground(lightBlue);
+
+        jScrollPane2.setFont(f2);
+        jScrollPane2.setForeground(brown);
+        jScrollPane2.setBackground(lightBlue);
+
      }
 
     
@@ -228,9 +353,8 @@ public class QueryFrame extends javax.swing.JFrame {
     * @param evt 
     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         boolean  bOK=true; 
-        jTextArea2.setText("");      
+        jTextArea2.setText("");
         
         if (jConnectButton.getText() == "Connect")
         {            
@@ -318,6 +442,11 @@ public class QueryFrame extends javax.swing.JFrame {
  */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
+        Color trailGreen = new Color(152, 199, 113);
+        Color lightBlue = new Color(206, 246, 250);
+        Color brown = new Color(107, 52, 50);
+        Font f2 = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+
         jTextArea2.setText("");        
         if (this.m_queryrunner.isActionQuery(m_queryChoice) == false)
             jPanel2.setVisible(true);
@@ -363,12 +492,21 @@ public class QueryFrame extends javax.swing.JFrame {
                     jPanel2.remove(m_scrollPane);
                 }
                 m_jTable = new JTable(allData, headers);
+
                 
                 m_jTable.setBounds(100, 100, 100, 100);
-                Color ivory=new Color(255,255,208);
-                Color skyblue = new Color(135, 206, 235);
                 m_jTable.setOpaque(false);
-                m_jTable.setBackground(skyblue);
+
+                // adding a header element to modify the appearance
+                JTableHeader m_jHeader = m_jTable.getTableHeader();
+                // Setting aesthetics for the query results table
+                m_jTable.setFont(f2);
+                m_jTable.setForeground(brown);
+                m_jTable.setBackground(lightBlue);
+                m_jHeader.setFont(f2);
+                m_jHeader.setForeground(brown);
+                m_jHeader.setBackground(trailGreen);
+
                 m_scrollPane = new JScrollPane(m_jTable);
                 jPanel2.add(m_scrollPane);// add table in panel using add() method                      
                 this.setVisible(true);                
