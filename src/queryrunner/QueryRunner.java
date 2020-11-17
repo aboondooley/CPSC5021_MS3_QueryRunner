@@ -335,6 +335,7 @@ public class QueryRunner {
             default:
                 break;
         }
+
     }
 
     /**
@@ -362,6 +363,68 @@ public class QueryRunner {
             queryrunner.ExecuteQuery(queryChoice, params);
             String[][] result = queryrunner.GetQueryData();
             String[] header = queryrunner.GetQueryHeaders();
+            String format;
+
+            switch (queryChoice) {
+                case 0: case 1: case 2:
+                    format = "%-20s%-20s%-10s";
+                    System.out.format(format, header[0], header[1], header[2]);
+                    System.out.println();
+                    for (int k = 0; k < result.length; k++) {
+                        System.out.format(format, result[k][0], result[k][1], result[k][2]);
+                        System.out.println();
+                    }
+                    break;
+                case 3: case 9:
+                    format = "%-25s%-30s%-10s%-10s%-20s%-10s";
+                    System.out.format(format, header[0], header[1], header[2], header[3], header[4], header[5]);
+                    System.out.println();
+                    for (int k = 0; k < result.length; k++) {
+                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4], result[k][5]);
+                        System.out.println();
+                    }
+                    break;
+                case 4:
+                    format = "%-15s%-15s%-20s";
+                    System.out.format(format, header[0], header[1], header[2]);
+                    System.out.println();
+                    for (int k = 0; k < result.length; k++) {
+                        System.out.format(format, result[k][0], result[k][1], result[k][2]);
+                        System.out.println();
+                    }
+                    break;
+                case 5:
+                    format = "%-20s%-20s%-10s%-15s%-30s";
+                    System.out.format(format, header[0], header[1], header[2], header[3], header[4]);
+                    System.out.println();
+                    for (int k = 0; k < result.length; k++) {
+                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4]);
+                        System.out.println();
+                    }
+                    break;
+                case 6: case 7:
+                    format = "%-25s%-30s%-10s%-15s%-15s";
+                    System.out.format(format, header[0], header[1], header[2], header[3], header[4]);
+                    System.out.println();
+                    for (int k = 0; k < result.length; k++) {
+                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4]);
+                        System.out.println();
+                    }
+                    break;
+                case 8:
+                    format = "%-25s%-30s%-18s%-10s";
+                    System.out.format(format, header[0], header[1], header[2], header[3]);
+                    System.out.println();
+                    for (int k = 0; k < result.length; k++) {
+                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3]);
+                        System.out.println();
+                    }
+                    break;
+                default:
+                    break;
+
+            }
+            /*
             for (int h = 0; h < header.length; h++) {
                 System.out.print(header[h] + " | ");
             }
@@ -371,7 +434,7 @@ public class QueryRunner {
                     System.out.print(result[k][l] + " | ");
                 }
                 System.out.println();
-            }
+            } */
         }
         System.out.println();
     }
