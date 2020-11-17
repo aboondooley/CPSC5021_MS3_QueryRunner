@@ -9,7 +9,33 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// Updates
+// Updates:
+
+// QueryFrame:
+// Updates aesthetics of the GUI - changed the font, text color, background color, and button colors to be earthy
+// natural colors because we are a hiking app
+// See lines 53-167 in QueryFrame
+// and lines 500-508 in QueryFrame
+
+// QueryRunner:
+// Created a UI menu for the user to select which queries they want to run, and the menu continues to prompt the user
+// until the user signals they want to exit by typing 11
+// If the user inputs an invalid option, they are re-prompted until the input is valid
+//
+// Created a method that prints out the query name once the user has selected a query, in case they forgot which query they selected
+//
+// Created a method which interacts with the database to run the selected query and retrieve the results.
+// It takes care of actions queries, as well as queries with and without parameters.
+//
+// Created a method to print out the query results to the console in a neat and read-able way. It mimics the formatting
+// an SQL table would have with proper indenting and spacing
+//
+// Created documentation of all new methods as well as in-line comments throughout the code
+// See lines 280-544 in QueryRunner
+
+// QueryJDBC:
+// Updated the connection so that useSSL is false as it was causing an error
+// See line 204 in QueryJDBC
 
 /**
  * 
@@ -153,8 +179,6 @@ public class QueryRunner {
                         "order by distance",
         new String[] {"DIST. LOWER LIMIT", "DIST. UPPER LIMIT"}, new boolean[] {false, false}, false, true));
     }
-    //TODO remove
-       //cpscproject.cntkecpiahit.us-east-1.rds.amazonaws.com
 
     public int GetTotalQueries()
     {
@@ -270,9 +294,11 @@ public class QueryRunner {
     }
 
     /**
-     *
+     * Prints out the UI menu. It shows the client what all of their options are for running queries or exiting.
+     * If the client inputs an invalid option they are re-prompted until they input a valid option
+     * After each query is run the menu is presented again to the client
      * @param c Scanner object to read in client input from the console
-     * @return
+     * @return the client's query choice number (or 11 for exit)
      */
     public int PrintMenu(Scanner c) {
         System.out.println("Select query (number) to run: ");
@@ -290,17 +316,22 @@ public class QueryRunner {
         System.out.println();
         System.out.println("Selection: ");
         String str = c.nextLine();
+        if (!str.equals("1")&&!str.equals("2")&&!str.equals("3")&&!str.equals("4")&&!str.equals("5")&&!str.equals("6")
+                &&!str.equals("7")&&!str.equals("8")&&!str.equals("9")&&!str.equals("10")&&!str.equals("11")) {
+            System.out.println("Invalid choice please enter a number 1-11.");
+            System.out.println();
+            PrintMenu(c);
+        }
         int queryChoice = Integer.parseInt(str);
         return queryChoice;
     }
 
     /**
-     *
-     * @param queryrunner
-     * @param c
-     * @param queryChoice
+     * After the client has chosen a query from the menu, this method prints out the name
+     * of the query after the client selects the query so they know which query they selected.
+     * @param queryChoice number of query that the client selected
      */
-    public void PrintQuery(QueryRunner queryrunner, Scanner c, int queryChoice) {
+    public void PrintQuery(int queryChoice) {
         switch (queryChoice) {
             case 0:
                 System.out.println("Total distance hiked by user");
@@ -339,10 +370,84 @@ public class QueryRunner {
     }
 
     /**
-     *
-     * @param queryrunner
-     * @param c
-     * @param queryChoice
+     * After the query has been run and results returned, this method
+     * prints out the results of the query to the console, formatted so it is readable and looks neat
+     * A different format is used depending on how many columns are in the return query results
+     * @param result a 2D array holding the results
+     * @param header a 1D array holding the column names
+     * @param queryChoice the query number being displayed
+     */
+    public void PrintQueryResults(String[][] result, String[] header, int queryChoice) {
+        String format;
+
+        switch (queryChoice) {
+            case 0: case 1: case 2:
+                format = "%-20s%-20s%-10s";
+                System.out.format(format, header[0], header[1], header[2]);
+                System.out.println();
+                for (int k = 0; k < result.length; k++) {
+                    System.out.format(format, result[k][0], result[k][1], result[k][2]);
+                    System.out.println();
+                }
+                break;
+            case 3: case 9:
+                format = "%-25s%-30s%-10s%-10s%-20s%-10s";
+                System.out.format(format, header[0], header[1], header[2], header[3], header[4], header[5]);
+                System.out.println();
+                for (int k = 0; k < result.length; k++) {
+                    System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4], result[k][5]);
+                    System.out.println();
+                }
+                break;
+            case 4:
+                format = "%-15s%-15s%-20s";
+                System.out.format(format, header[0], header[1], header[2]);
+                System.out.println();
+                for (int k = 0; k < result.length; k++) {
+                    System.out.format(format, result[k][0], result[k][1], result[k][2]);
+                    System.out.println();
+                }
+                break;
+            case 5:
+                format = "%-20s%-20s%-10s%-15s%-30s";
+                System.out.format(format, header[0], header[1], header[2], header[3], header[4]);
+                System.out.println();
+                for (int k = 0; k < result.length; k++) {
+                    System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4]);
+                    System.out.println();
+                }
+                break;
+            case 6: case 7:
+                format = "%-25s%-30s%-10s%-15s%-15s";
+                System.out.format(format, header[0], header[1], header[2], header[3], header[4]);
+                System.out.println();
+                for (int k = 0; k < result.length; k++) {
+                    System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4]);
+                    System.out.println();
+                }
+                break;
+            case 8:
+                format = "%-25s%-30s%-18s%-10s";
+                System.out.format(format, header[0], header[1], header[2], header[3]);
+                System.out.println();
+                for (int k = 0; k < result.length; k++) {
+                    System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3]);
+                    System.out.println();
+                }
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    /**
+     * After the query name has been printed, this method runs the query by prompting the client for all
+     * necessary parameters and talks to the database, and then uses the PrintQueryResults method to format and
+     * print out the results
+     * @param queryrunner queryrunner object
+     * @param c scanner object to get input from client
+     * @param queryChoice query number that is being run
      */
     public void RunQuery(QueryRunner queryrunner, Scanner c, int queryChoice) {
         int amt = queryrunner.GetParameterAmtForQuery(queryChoice);
@@ -363,78 +468,7 @@ public class QueryRunner {
             queryrunner.ExecuteQuery(queryChoice, params);
             String[][] result = queryrunner.GetQueryData();
             String[] header = queryrunner.GetQueryHeaders();
-            String format;
-
-            switch (queryChoice) {
-                case 0: case 1: case 2:
-                    format = "%-20s%-20s%-10s";
-                    System.out.format(format, header[0], header[1], header[2]);
-                    System.out.println();
-                    for (int k = 0; k < result.length; k++) {
-                        System.out.format(format, result[k][0], result[k][1], result[k][2]);
-                        System.out.println();
-                    }
-                    break;
-                case 3: case 9:
-                    format = "%-25s%-30s%-10s%-10s%-20s%-10s";
-                    System.out.format(format, header[0], header[1], header[2], header[3], header[4], header[5]);
-                    System.out.println();
-                    for (int k = 0; k < result.length; k++) {
-                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4], result[k][5]);
-                        System.out.println();
-                    }
-                    break;
-                case 4:
-                    format = "%-15s%-15s%-20s";
-                    System.out.format(format, header[0], header[1], header[2]);
-                    System.out.println();
-                    for (int k = 0; k < result.length; k++) {
-                        System.out.format(format, result[k][0], result[k][1], result[k][2]);
-                        System.out.println();
-                    }
-                    break;
-                case 5:
-                    format = "%-20s%-20s%-10s%-15s%-30s";
-                    System.out.format(format, header[0], header[1], header[2], header[3], header[4]);
-                    System.out.println();
-                    for (int k = 0; k < result.length; k++) {
-                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4]);
-                        System.out.println();
-                    }
-                    break;
-                case 6: case 7:
-                    format = "%-25s%-30s%-10s%-15s%-15s";
-                    System.out.format(format, header[0], header[1], header[2], header[3], header[4]);
-                    System.out.println();
-                    for (int k = 0; k < result.length; k++) {
-                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3], result[k][4]);
-                        System.out.println();
-                    }
-                    break;
-                case 8:
-                    format = "%-25s%-30s%-18s%-10s";
-                    System.out.format(format, header[0], header[1], header[2], header[3]);
-                    System.out.println();
-                    for (int k = 0; k < result.length; k++) {
-                        System.out.format(format, result[k][0], result[k][1], result[k][2], result[k][3]);
-                        System.out.println();
-                    }
-                    break;
-                default:
-                    break;
-
-            }
-            /*
-            for (int h = 0; h < header.length; h++) {
-                System.out.print(header[h] + " | ");
-            }
-            System.out.println();
-            for (int k = 0; k < result.length; k++) {
-                for (int l = 0; l < result[k].length; l++) {
-                    System.out.print(result[k][l] + " | ");
-                }
-                System.out.println();
-            } */
+            queryrunner.PrintQueryResults(result, header, queryChoice);
         }
         System.out.println();
     }
@@ -501,7 +535,7 @@ public class QueryRunner {
                     while (queryChoice != 11) {
                         queryChoice--;
                         // prints the query name chosen by the client
-                        queryrunner.PrintQuery(queryrunner, c, queryChoice);
+                        queryrunner.PrintQuery(queryChoice);
                         // runs the query, prompting the client for parameters, if necessary
                         queryrunner.RunQuery(queryrunner, c, queryChoice);
                         // prompts the client again from the main menu
