@@ -284,12 +284,8 @@ public class QueryRunner {
 
     /**
      * Prints out the UI menu. It shows the client what all of their options are for running queries or exiting.
-     * If the client inputs an invalid option they are re-prompted until they input a valid option
-     * After each query is run the menu is presented again to the client
-     * @param c Scanner object to read in client input from the console
-     * @return the client's query choice number (or 11 for exit)
      */
-    public int PrintMenu(Scanner c) {
+    public static void PrintMenu() {
         System.out.println("Select query (number) to run: ");
         System.out.println("1  Total distance hiked for user");
         System.out.println("2  Total elevation hiked for user");
@@ -304,17 +300,28 @@ public class QueryRunner {
         System.out.println("11 Exit program");
         System.out.println();
         System.out.println("Selection: ");
+    }
+
+    /**
+     * Prints out the menu and validates that the users' input is valid. Continues prompting until a valid
+     * input is given
+     * @param c scanner object to get input from console
+     * @return returns the valid menu option that the client selected
+     */
+    public int MenuChoice(Scanner c)
+    {
+        PrintMenu();
         String str = c.nextLine();
-        if (!str.equals("1")&&!str.equals("2")&&!str.equals("3")&&!str.equals("4")&&!str.equals("5")&&!str.equals("6")
+        while (!str.equals("1")&&!str.equals("2")&&!str.equals("3")&&!str.equals("4")&&!str.equals("5")&&!str.equals("6")
                 &&!str.equals("7")&&!str.equals("8")&&!str.equals("9")&&!str.equals("10")&&!str.equals("11")) {
             System.out.println("Invalid choice please enter a number 1-11.");
             System.out.println();
-            PrintMenu(c);
+            PrintMenu();
+            str = c.nextLine();
         }
         int queryChoice = Integer.parseInt(str);
         return queryChoice;
     }
-
     /**
      * After the client has chosen a query from the menu, this method prints out the name
      * of the query after the client selects the query so they know which query they selected.
@@ -517,7 +524,7 @@ public class QueryRunner {
                 if (success) {
 
                     // prints menu of queries for client to choose from
-                    int queryChoice = queryrunner.PrintMenu(c);
+                    int queryChoice = queryrunner.MenuChoice(c);
 
                     // option 11 = exit app
                     // continues to print menu and prompt client for query choice until the client chooses to exit
@@ -528,7 +535,8 @@ public class QueryRunner {
                         // runs the query, prompting the client for parameters, if necessary
                         queryrunner.RunQuery(queryrunner, c, queryChoice);
                         // prompts the client again from the main menu
-                        queryChoice = queryrunner.PrintMenu(c);
+                        queryChoice = queryrunner.MenuChoice(c);
+
                     }
 
                     // prints a good bye message when the client chooses to exit
