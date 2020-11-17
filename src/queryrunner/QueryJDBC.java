@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author mckeem
  */
-
+// Updates: in Connect, set useSSL to false
 
 public class QueryJDBC {
 
@@ -199,7 +199,8 @@ public class QueryJDBC {
         url = "jdbc:mysql://";
         url += host;
         url +=":3306/";
-        url += database;   
+        url += database;
+        // updated to set useSSL to false
         url +="?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
         try 
         {

@@ -9,6 +9,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Updates
+
 /**
  * 
  * QueryRunner takes a list of Queries that are initialized in it's constructor
@@ -28,10 +30,9 @@ public class QueryRunner {
         m_error="";
 
         
-        // You will need to put your Project Application in the below variable
+        // Our app is called Trail Seeker
 
         this.m_projectTeamApplication="Trail Seeker";
-        //this.m_projectTeamApplication="CITYELECTION";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         
         // Each row that is added to m_queryArray is a separate query. It does not work on Stored procedure calls.
         // The 'new' Java keyword is a way of initializing the data that will be added to QueryArray. Please do not change
@@ -50,7 +51,7 @@ public class QueryRunner {
                 "left join hike_instance on hiker.hiker_id = hike_instance.hiker_id " +
                 "left join trail on hike_instance.trail_id = trail.trail_id " +
                 "where hiker.hiker_id = ?",
-                new String[] {"HIKER_ID"}, new boolean[] {false}, false, true));
+                new String[] {"HIKER ID"}, new boolean[] {false}, false, true));
         // Query 2
         m_queryArray.add(new QueryData(
                 "select hiker_fname, hiker_lname, sum(elevation) as full_elevation " +
@@ -58,7 +59,7 @@ public class QueryRunner {
                         "left join hike_instance on hiker.hiker_id = hike_instance.hiker_id " +
                         "left join trail on hike_instance.trail_id = trail.trail_id " +
                         "where hike_instance.hiker_id = ?",
-                new String[] {"HIKER_ID"}, new boolean[] {false}, false, true));
+                new String[] {"HIKER ID"}, new boolean[] {false}, false, true));
         // Query 3
         m_queryArray.add(new QueryData(
                 "select hiker_fname, hiker_lname, count(*) as full_trail " +
@@ -80,7 +81,7 @@ public class QueryRunner {
                         "from hike_instance " +
                         "where hiker_id = ?) " +
                         "order by year(hike_instance_date), month(hike_instance_date)",
-                new String[] {"HIKER_ID"}, new boolean[] {false}, false, true));
+                new String[] {"HIKER ID"}, new boolean[] {false}, false, true));
         // Query 5
         m_queryArray.add(new QueryData(
                 "select year(invoice_date) as year, month(invoice_date) as month, sum(line_quantity*product_price) as total_product_revenue " +
@@ -115,7 +116,7 @@ public class QueryRunner {
                         "select mtn_range_id " +
                         "from hiker " +
                         "where hiker_id = ? )",
-        new String[] {"HIKER_ID", "ENTER AGAIN"}, new boolean[] {false, false}, false, true));
+        new String[] {"HIKER ID", "HIKER ID"}, new boolean[] {false, false}, false, true));
         // Query 8
         m_queryArray.add(new QueryData(
                 "select mtn_range_name, trail_name, distance, elevation, state_name " +
@@ -128,7 +129,7 @@ public class QueryRunner {
                         "where hiker_id = ? ) " +
                         "and trail.state_abbrv = (select state_abbrv from hiker where hiker_id = ? ) " +
                         "order by distance desc, elevation desc",
-         new String[] {"HIKER_ID", "ENTER AGAIN"}, new boolean[] {false, false}, false, true));
+         new String[] {"HIKER ID", "HIKER ID"}, new boolean[] {false, false}, false, true));
         // Query 9
         m_queryArray.add(new QueryData(
                 "select mtn_range_name, trail_name, avg(rating) as average_rating, count(*) as hike_count " +
@@ -151,11 +152,6 @@ public class QueryRunner {
                         "group by trail_id " +
                         "order by distance",
         new String[] {"DIST. LOWER LIMIT", "DIST. UPPER LIMIT"}, new boolean[] {false, false}, false, true));
-        //m_queryArray.add(new QueryData("Select * from contact", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        //m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-                       
     }
     //TODO remove
        //cpscproject.cntkecpiahit.us-east-1.rds.amazonaws.com
@@ -273,6 +269,11 @@ public class QueryRunner {
         return m_error;
     }
 
+    /**
+     *
+     * @param c Scanner object to read in client input from the console
+     * @return
+     */
     public int PrintMenu(Scanner c) {
         System.out.println("Select query (number) to run: ");
         System.out.println("1  Total distance hiked for user");
@@ -286,11 +287,19 @@ public class QueryRunner {
         System.out.println("9  List of top 10 most hiked trails");
         System.out.println("10 List of trails within given distance range");
         System.out.println("11 Exit program");
+        System.out.println();
+        System.out.println("Selection: ");
         String str = c.nextLine();
         int queryChoice = Integer.parseInt(str);
         return queryChoice;
     }
 
+    /**
+     *
+     * @param queryrunner
+     * @param c
+     * @param queryChoice
+     */
     public void PrintQuery(QueryRunner queryrunner, Scanner c, int queryChoice) {
         switch (queryChoice) {
             case 0:
@@ -328,6 +337,12 @@ public class QueryRunner {
         }
     }
 
+    /**
+     *
+     * @param queryrunner
+     * @param c
+     * @param queryChoice
+     */
     public void RunQuery(QueryRunner queryrunner, Scanner c, int queryChoice) {
         int amt = queryrunner.GetParameterAmtForQuery(queryChoice);
         String[] params = new String[amt];
@@ -336,7 +351,7 @@ public class QueryRunner {
             for (int j = 0; j < amt; j++) {
                 String label = queryrunner.GetParamText(queryChoice, j);
                 System.out.println("Parameter " + (j+1) + " " + label + ": ");
-                params[j] = c.next();
+                params[j] = c.nextLine();
             }
         }
         if (queryrunner.isActionQuery(queryChoice)) {
@@ -368,6 +383,8 @@ public class QueryRunner {
     private int m_updateAmount;
             
     /**
+     * Main method.
+     * Prompts the user to pick either the GUI or console versions.
      * @param args the command line arguments
      */
     
@@ -375,16 +392,17 @@ public class QueryRunner {
     
     public static void main(String[] args) {
         Scanner c = new Scanner(System.in);
+
+        // allows the user to select GUI or console version when they start the program
         System.out.println("GUI or console version?");
         System.out.println("1 GUI");
         System.out.println("2 Console");
-        System.out.println("Choice: ");
-        String str = c.nextLine();
-        int choice = Integer.parseInt(str);
+        System.out.println("Enter choice number: ");
+        String choice = c.nextLine();
 
         final QueryRunner queryrunner = new QueryRunner();
         
-        if (choice == 1) // GUI version
+        if (choice.equals("1")) // GUI version
         {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
@@ -393,11 +411,10 @@ public class QueryRunner {
                 }            
             });
         }
-        else
+        else if (choice.equals("2")) // console version
         {
-            if (choice == 2) // console version
-            {
 
+            // prompts the client for database connection info
                 System.out.println("Welcome to the Trail Seeker Console!");
                 System.out.println("Enter info to connect to the database.");
                 System.out.println("Host name: ");
@@ -409,76 +426,48 @@ public class QueryRunner {
                 System.out.println("Database: ");
                 String db = c.nextLine();
 
+                // connect to database
                 boolean success = queryrunner.Connect(connection, username, password, db);
                 if (success) {
 
-
+                    // prints menu of queries for client to choose from
                     int queryChoice = queryrunner.PrintMenu(c);
 
+                    // option 11 = exit app
+                    // continues to print menu and prompt client for query choice until the client chooses to exit
                     while (queryChoice != 11) {
                         queryChoice--;
+                        // prints the query name chosen by the client
                         queryrunner.PrintQuery(queryrunner, c, queryChoice);
+                        // runs the query, prompting the client for parameters, if necessary
                         queryrunner.RunQuery(queryrunner, c, queryChoice);
+                        // prompts the client again from the main menu
                         queryChoice = queryrunner.PrintMenu(c);
                     }
 
-                    System.out.println("Thanks for using Trail Seeker Console!");
+                    // prints a good bye message when the client chooses to exit
+                    System.out.println("Thanks for using Trail Seeker App Console!");
                     boolean disconnect_success = queryrunner.Disconnect();
+
+                    // prints out the disconnection error if the disconnection is unsuccessful
                     if (!disconnect_success) {
+                        System.out.println("Error while disconnecting from the database.");
+                        System.out.println("Error: ");
                         System.out.println(queryrunner.GetError());
                     }
 
                 } else {
+                    // prints out an error message for the client if the connection is unsuccessful
+                    System.out.println("Failed when connecting to the server. Please check login info and try again.");
+                    System.out.println("Error: ");
                     System.out.println(queryrunner.GetError());
                 }
 
-
-            	// System.out.println("Nothing has been implemented yet. Please implement the necessary code");
-               // TODO 
-                // You should code the following functionality:
-
-                //    You need to determine if it is a parameter query. If it is, then
-                //    you will need to ask the user to put in the values for the Parameters in your query
-                //    you will then call ExecuteQuery or ExecuteUpdate (depending on whether it is an action query or regular query)
-                //    if it is a regular query, you should then get the data by calling GetQueryData. You should then display this
-                //    output. 
-                //    If it is an action query, you will tell how many row's were affected by it.
-                // 
-                //    This is Psuedo Code for the task:  
-                //    Connect()
-                //    n = GetTotalQueries()
-                //    for (i=0;i < n; i++)
-                //    {
-                //       Is it a query that Has Parameters
-                //       Then
-                //           amt = find out how many parameters it has
-                //           Create a paramter array of strings for that amount
-                //           for (j=0; j< amt; j++)
-                //              Get The Paramater Label for Query and print it to console. Ask the user to enter a value
-                //              Take the value you got and put it into your parameter array
-                //           If it is an Action Query then
-                //              call ExecuteUpdate to run the Query
-                //              call GetUpdateAmount to find out how many rows were affected, and print that value
-                //           else
-                //               call ExecuteQuery 
-                //               call GetQueryData to get the results back
-                //               print out all the results
-                //           end if
-                //      }
-                //    Disconnect()
-
-
-                // NOTE - IF THERE ARE ANY ERRORS, please print the Error output
-                // NOTE - The QueryRunner functions call the various JDBC Functions that are in QueryJDBC. If you would rather code JDBC
-                // functions directly, you can choose to do that. It will be harder, but that is your option.
-                // NOTE - You can look at the QueryRunner API calls that are in QueryFrame.java for assistance. You should not have to 
-                //    alter any code in QueryJDBC, QueryData, or QueryFrame to make this work.
-//                System.out.println("Please write the non-gui functionality");
                 
-            } else {
-                System.out.println("Invalid choice, please try again.");
-            }
+        } else { // clients does not enter either 1 or 2
+                System.out.println("Invalid choice, please choose either 1 (GUI) or 2 (console).");
+                String[] s = {};
+                main(s); // runs main again if incorrect input is entered - running the program again
         }
- 
     }    
 }

@@ -364,10 +364,11 @@ public class QueryFrame extends javax.swing.JFrame {
                 }
                 m_jTable = new JTable(allData, headers);
                 
-                m_jTable.setBounds(100, 100, 100, 80);
+                m_jTable.setBounds(100, 100, 100, 100);
                 Color ivory=new Color(255,255,208);
+                Color skyblue = new Color(135, 206, 235);
                 m_jTable.setOpaque(false);
-                m_jTable.setBackground(ivory);           
+                m_jTable.setBackground(skyblue);
                 m_scrollPane = new JScrollPane(m_jTable);
                 jPanel2.add(m_scrollPane);// add table in panel using add() method                      
                 this.setVisible(true);                
